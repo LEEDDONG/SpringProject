@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fff9db;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .login-container {
+            background-color: #fff3b0;
+            border: 3px solid #ffd56b;
+            border-radius: 20px;
+            padding: 30px 40px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        h1 {
+            color: #ff9900;
+            margin-bottom: 20px;
+            font-family: 'Comic Sans MS', sans-serif;
+        }
+        label {
+            display: block;
+            margin: 15px 0;
+            font-weight: bold;
+            color: #333;
+        }
+        input {
+            padding: 8px;
+            border: 1px solid #ffcc66;
+            border-radius: 5px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .action-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+        button {
+            background-color: #ffcc33;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            padding: 10px 25px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #ff9900;
+        }
+        a {
+            color: #ff9900;
+            font-weight: bold;
+            text-decoration: none;
+            font-size: 16px;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h1>Login 🐤</h1>
+        <form th:action="@{/login}" method="post">
+            <label>Username <input type="text" name="userName" /></label>
+            <label>Password <input type="password" name="password" /></label>
+            <div class="action-container">
+                <button type="submit">Login</button>
+                <a th:href="@{/signup}">Sign up</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

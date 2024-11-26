@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>다이어리 목록</title>
+    <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Quicksand', Arial, sans-serif;
+            background-color: #fff9db;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .diary-container {
+            background-color: #fff3b0;
+            border: 3px solid #ffd56b;
+            border-radius: 20px;
+            padding: 30px 40px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            width: 85%;
+            max-width: 700px;
+        }
+        h1 {
+            color: #ffb703;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .add-diary-button {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        .add-diary-button a {
+            background-color: #ffcb42;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .add-diary-button a:hover {
+            background-color: #ffa000;
+            transform: translateY(-3px);
+        }
+        .add-diary-button a img {
+            width: 20px;
+            height: 20px;
+        }
+        .diary-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+        .diary-card {
+            background-color: #fffdf0;
+            border: 2px solid #ffe4a1;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 220px;
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+        }
+        .diary-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        }
+        .diary-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #ff9900;
+            margin-bottom: 10px;
+        }
+        .diary-date {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 15px;
+        }
+        .diary-action a {
+            background-color: #ffcb42;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 15px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+        .diary-action a:hover {
+            background-color: #ffa000;
+        }
+        .no-diaries {
+            text-align: center;
+            font-size: 16px;
+            color: #ffb703;
+            margin: 20px 0;
+        }
+        /* 병아리 아이콘 */
+        .diary-card::before {
+            content: '🐥';
+            position: absolute;
+            top: -15px;
+            right: -15px;
+            font-size: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="diary-container">
+        <h1>🐤 My Cute Diaries</h1>
+
+        <!-- 다이어리 추가 버튼 -->
+        <div class="add-diary-button">
+            <a href="/diary/create">
+                다이어리 추가
+            </a>
+        </div>
+
+
+        <!-- 다이어리 목록이 있을 때 -->
+        <div th:if="${diaries != null}" class="diary-list">
+            <div th:each="diary : ${diaries}" class="diary-card">
+                <div class="diary-title" th:text="${diary.title}">다이어리 제목</div>
+                <div class="diary-date" th:text="${diary.date}">작성일</div>
+                <div class="diary-action">
+                    <a th:href="@{/diary/{id}(id=${diary.id})}">보기</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- 다이어리 목록이 없을 때 -->
+        <div th:if="${diaries == null or #lists.isEmpty(diaries)}" class="no-diaries">
+            <p>🐥 현재 다이어리가 없습니다. 추가해 보세요!</p>
+        </div>
+    </div>
+</body>
+</html>
