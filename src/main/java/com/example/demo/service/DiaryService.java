@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import java.util.List;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.domain.Diary;
@@ -20,11 +21,12 @@ public class DiaryService {
         diaryRepository.save(diary);
     }
 
-    public void update(Diary diary) {
-        Diary findDiary = diaryRepository.findById(diary.getId()).get();
-        findDiary.setTitle(diary.getTitle());
-        findDiary.setContent(diary.getContent());
-        diaryRepository.save(diary);
+    public void updateDiary(Diary diary) {
+        Diary old = diaryRepository.findById(diary.getId()).get();
+        old.setTitle(diary.getTitle());
+        old.setContent(diary.getContent());
+        old.setFilePath(diary.getFilePath());
+        diaryRepository.save(old);
     }
 
     public List<Diary> getDiariesByUser(Users user) {
@@ -32,7 +34,8 @@ public class DiaryService {
     }
 
     public Diary getDiaryById(Long id) {
-        return diaryRepository.findById(id).orElseThrow(() -> new RuntimeException("Diary with id " + id + " not found!"));
+        return diaryRepository.findById(id).orElseThrow(()
+                -> new RuntimeException("Diary with id " + id + " not found!"));
     }
 }
 

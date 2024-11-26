@@ -2,8 +2,12 @@
 	
 	
 	import java.io.IOException;
+	import java.nio.file.Files;
+	import java.nio.file.Path;
+	import java.nio.file.Paths;
+	import java.nio.file.StandardCopyOption;
 	import java.util.List;
-	
+
 	import org.springframework.stereotype.Controller;
 	import org.springframework.ui.Model;
 	import org.springframework.web.bind.annotation.GetMapping;
@@ -64,20 +68,32 @@
 			if (diary == null) {
 				throw new RuntimeException("Diary with id " + id + " not found!");
 			}
-			model.addAttribute("diary", diary); // 조회된 다이어리 객체를 모델에 추가
-			return "updateDiary"; // 수정 페이지로 이동
+			model.addAttribute("diary", diary);
+			return "updateDiary";
 		}
 
 		@PostMapping("/diary/update")
-		public String update(@ModelAttribute Diary diary, MultipartFile file, HttpSession session) {
-			Users loggedInUser = (Users) session.getAttribute("loggedInUser");
-
-			if (loggedInUser != null) {
-				diary.setAuthor(loggedInUser);
-				diaryService.update(diary);
-				return "redirect:/diary";
+		public String update(@ModelAttribute Diary diary, MultipartFile file) {
+			if (diary.getId() == null) {
+				// 여기서 예외를 던지거나 500 오류가 발생할 수 있습니다.
+				throw new IllegalArgumentException("The diary ID must not be null");
 			}
-			return "redirect:/login";
-		}
+			if (file != null && !file.isEmpty()) {
+				try {
+					// 파일 저장 경로 설정
+					String fileName = file.getOriginalFilename();
+					Path filePath = Paths.get("upload-dir", fileName);
+					Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
+					// 파일 경로를 diary 객체에 설정
+					diary.setFilePath(filePath.toString()); // Diary 객체에 파일 경로 저장
+
+				} catch (IOException e) {
+					e.printStackTrace();
+					return "redirect:/diary?error";
+				}
+			}
+			diaryService.updateDiary(diary);
+			return "redirect:/diary";
+		}
 	}

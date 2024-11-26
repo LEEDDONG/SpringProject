@@ -37,7 +37,9 @@ public class Diary {
 	public Long getId() {
 		return id;
 	}
-	public void setId(Long id) { this.id = id; }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
 	public String getTitle() {
 		return title;
@@ -57,8 +59,11 @@ public class Diary {
 	public void setContent(String content) {
 		this.content = content;
 	}
-	
 
-	
-	
+	public void setFilePath(String string) {
+
+	}
+	public String getFilePath() {
+        return "";
+    }
 }
