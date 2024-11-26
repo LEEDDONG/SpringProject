@@ -20,8 +20,19 @@ public class DiaryService {
         diaryRepository.save(diary);
     }
 
+    public void update(Diary diary) {
+        Diary findDiary = diaryRepository.findById(diary.getId()).get();
+        findDiary.setTitle(diary.getTitle());
+        findDiary.setContent(diary.getContent());
+        diaryRepository.save(diary);
+    }
+
     public List<Diary> getDiariesByUser(Users user) {
         return diaryRepository.findByAuthor(user);
+    }
+
+    public Diary getDiaryById(Long id) {
+        return diaryRepository.findById(id).orElseThrow(() -> new RuntimeException("Diary with id " + id + " not found!"));
     }
 }
 
