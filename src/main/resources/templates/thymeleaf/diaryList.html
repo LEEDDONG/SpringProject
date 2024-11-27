@@ -133,6 +133,12 @@
         <div th:if="${diaries != null}" class="diary-list">
             <div th:each="diary : ${diaries}" class="diary-card">
                 <div class="diary-title" th:text="${diary.title}">다이어리 제목</div>
+
+                <!-- 다이어리에 이미지가 있으면 표시 -->
+                <div th:if="${diary.fileType != null and diary.fileType.startsWith('image/')}" class="diary-image">
+                    <img th:src="@{/diary/file/{id}(id=${diary.id})}" alt="Diary Image" style="max-width: 100px; height: auto; margin-top: 10px;">
+                </div>
+
                 <div class="diary-date" th:text="${diary.date}">작성일</div>
                 <div class="diary-action">
                     <a th:href="@{/diary/{id}(id=${diary.id})}">보기</a>

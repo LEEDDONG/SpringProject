@@ -40,5 +40,9 @@ public class DiaryService {
     public Diary getDiaryById(Long id) {
         return diaryRepository.findById(id).orElseThrow(() -> new RuntimeException("Diary with id " + id + " not found!"));
     }
+
+    public List<Diary> getAllDiaries() {
+        return List.of();
+    }
 }
 
