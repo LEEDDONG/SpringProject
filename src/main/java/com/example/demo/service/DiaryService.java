@@ -2,7 +2,6 @@ package com.example.demo.service;
 
 import java.util.List;
 
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.domain.Diary;
@@ -22,11 +21,17 @@ public class DiaryService {
     }
 
     public void updateDiary(Diary diary) {
-        Diary old = diaryRepository.findById(diary.getId()).get();
-        old.setTitle(diary.getTitle());
-        old.setContent(diary.getContent());
-        old.setFilePath(diary.getFilePath());
-        diaryRepository.save(old);
+        Diary date = diaryRepository.findById(diary.getId())
+                .orElseThrow(() -> new IllegalArgumentException("Diary not found with ID: " + diary.getId()));
+        date.setTitle(diary.getTitle());
+        date.setContent(diary.getContent());
+        date.setDate(diary.getDate());
+        if (diary.getFileData() != null) {
+            date.setFileData(diary.getFileData());
+            date.setFileName(diary.getFileName());
+            date.setFileType(diary.getFileType());
+        }
+        diaryRepository.save(date);
     }
 
     public List<Diary> getDiariesByUser(Users user) {
@@ -34,8 +39,8 @@ public class DiaryService {
     }
 
     public Diary getDiaryById(Long id) {
-        return diaryRepository.findById(id).orElseThrow(()
-                -> new RuntimeException("Diary with id " + id + " not found!"));
+        return diaryRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Diary with id " + id + " not found!"));
     }
 }
 

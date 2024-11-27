@@ -3,12 +3,7 @@ package com.example.demo.domain;
 import java.time.LocalDate;
 import java.util.Date;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 
 @Entity
 public class Diary {
@@ -23,7 +18,12 @@ public class Diary {
 	@ManyToOne
 	@JoinColumn(name="user_id")
 	private Users author;
-	
+
+	@Lob
+	private byte[] fileData;
+
+	private String fileName;
+	private String fileType;
 	
 	public Users getAuthor() {
 		return author;
@@ -32,7 +32,6 @@ public class Diary {
 	public void setAuthor(Users author) {
 		this.author = author;
 	}
-
 
 	public Long getId() {
 		return id;
@@ -60,10 +59,22 @@ public class Diary {
 		this.content = content;
 	}
 
-	public void setFilePath(String string) {
-
-	}
-	public String getFilePath() {
-        return "";
+    public byte[] getFileData() {
+        return fileData;
+    }
+    public void setFileData(byte[] fileData) {
+        this.fileData = fileData;
+    }
+    public String getFileName() {
+        return fileName;
+    }
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+    public String getFileType() {
+        return fileType;
+    }
+    public void setFileType(String fileType) {
+        this.fileType = fileType;
     }
 }
