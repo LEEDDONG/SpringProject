@@ -21,8 +21,7 @@ public class DiaryService {
     }
 
     public void updateDiary(Diary diary) {
-        Diary date = diaryRepository.findById(diary.getId())
-                .orElseThrow(() -> new IllegalArgumentException("Diary not found with ID: " + diary.getId()));
+        Diary date = diaryRepository.findById(diary.getId()).orElseThrow(() -> new IllegalArgumentException("Diary not found with ID: " + diary.getId()));
         date.setTitle(diary.getTitle());
         date.setContent(diary.getContent());
         date.setDate(diary.getDate());
@@ -39,8 +38,7 @@ public class DiaryService {
     }
 
     public Diary getDiaryById(Long id) {
-        return diaryRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Diary with id " + id + " not found!"));
+        return diaryRepository.findById(id).orElseThrow(() -> new RuntimeException("Diary with id " + id + " not found!"));
     }
 }
 

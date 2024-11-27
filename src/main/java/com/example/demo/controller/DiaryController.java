@@ -1,13 +1,10 @@
 	package com.example.demo.controller;
 	
-	
-	import java.io.IOException;
+
 	import java.util.List;
 
 	import com.example.demo.persistance.DiaryRepository;
-	import org.springframework.http.HttpHeaders;
-	import org.springframework.http.HttpStatus;
-	import org.springframework.http.ResponseEntity;
+	import org.springframework.http.*;
 	import org.springframework.stereotype.Controller;
 	import org.springframework.ui.Model;
 	import org.springframework.web.bind.annotation.*;
@@ -65,6 +62,7 @@
 		@GetMapping("/diary/{id}")
 		public String getDiaryById(@PathVariable Long id, Model model) {
 			Diary diary = diaryService.getDiaryById(id);
+
 			if (diary == null) {
 				throw new RuntimeException("Diary with id " + id + " not found!");
 			}
@@ -97,8 +95,7 @@
 
 		@GetMapping("/diary/file/{id}")
 		public ResponseEntity<byte[]> getFile(@PathVariable Long id) {
-			Diary diary = diaryRepository.findById(id)
-					.orElseThrow(() -> new IllegalArgumentException("Diary not found with ID: " + id));
+			Diary diary = diaryRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Diary not found with ID: " + id));
 
 			if (diary.getFileData() != null) {
 				HttpHeaders headers = new HttpHeaders();
@@ -106,5 +103,23 @@
 				return new ResponseEntity<>(diary.getFileData(), headers, HttpStatus.OK);
 			}
 			return ResponseEntity.notFound().build();
+		}
+
+		@GetMapping("/diary/file/{id}/download")
+		public ResponseEntity<byte[]> downloadFile(@PathVariable Long id) {
+			try {
+				Diary diary = diaryService.getDiaryById(id);
+				if (diary != null && diary.getFileData() != null) {
+					HttpHeaders headers = new HttpHeaders();
+					headers.setContentType(MediaType.parseMediaType(diary.getFileType()));
+					headers.setContentDisposition(ContentDisposition.builder("attachment").filename(diary.getFileName()).build());
+					return new ResponseEntity<>(diary.getFileData(), headers, HttpStatus.OK);
+				} else {
+					return ResponseEntity.notFound().build(); // 파일이 없을 경우
+				}
+			} catch (Exception e) {
+				e.printStackTrace(); // 예외 로그 출력
+				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null); // 서버 오류 처리
+			}
 		}
 	}
