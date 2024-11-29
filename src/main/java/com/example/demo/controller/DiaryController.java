@@ -48,12 +48,24 @@
 	    }
 	
 	    @PostMapping("/diary/create")
-	    public String create(@ModelAttribute Diary diary, HttpSession session) {
+	    public String create(@ModelAttribute Diary diary, @RequestParam(value = "file", required = false) MultipartFile file, HttpSession session, RedirectAttributes redirectAttributes) {
 	        Users loggedInUser = (Users) session.getAttribute("loggedInUser");
 	        
 	        if (loggedInUser != null) {
 	            diary.setAuthor(loggedInUser);
-	            diaryService.saveDiary(diary);
+				try {
+					if (file != null && !file.isEmpty()) {
+						// 파일 데이터를 바이너리로 변환
+						diary.setFileData(file.getBytes());
+						diary.setFileName(file.getOriginalFilename());
+						diary.setFileType(file.getContentType());
+					}
+					diaryService.saveDiary(diary);
+					redirectAttributes.addFlashAttribute("message", "Diary updated successfully!");
+				} catch (Exception e) {
+					e.printStackTrace();
+					redirectAttributes.addFlashAttribute("message", "Failed to update diary.");
+				}
 	            return "redirect:/diary";  // Redirect to the correct URL for diary listing
 	        }
 	        return "redirect:/login";  // Redirect to login if user is not logged in
@@ -71,8 +83,7 @@
 		}
 
 		@PostMapping("/diary/update")
-		public String update(@ModelAttribute Diary diary,
-							 @RequestParam(value = "file", required = false) MultipartFile file, RedirectAttributes redirectAttributes) {
+		public String update(@ModelAttribute Diary diary, @RequestParam(value = "file", required = false) MultipartFile file, RedirectAttributes redirectAttributes) {
 			if (diary.getId() == null) {
 				// 여기서 예외를 던지거나 500 오류가 발생할 수 있습니다.
 				throw new IllegalArgumentException("The diary ID must not be null");

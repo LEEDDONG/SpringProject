@@ -21,16 +21,18 @@ public class DiaryService {
     }
 
     public void updateDiary(Diary diary) {
-        Diary date = diaryRepository.findById(diary.getId()).orElseThrow(() -> new IllegalArgumentException("Diary not found with ID: " + diary.getId()));
-        date.setTitle(diary.getTitle());
-        date.setContent(diary.getContent());
-        date.setDate(diary.getDate());
-        if (diary.getFileData() != null) {
-            date.setFileData(diary.getFileData());
-            date.setFileName(diary.getFileName());
-            date.setFileType(diary.getFileType());
+        Diary data = diaryRepository.findById(diary.getId()).orElseThrow(() -> new IllegalArgumentException("Diary not found with ID: " + diary.getId()));
+        data.setTitle(diary.getTitle());
+        data.setContent(diary.getContent());
+        if (diary.getDate() != null) {
+            data.setDate(diary.getDate());
         }
-        diaryRepository.save(date);
+        if (diary.getFileData() != null) {
+            data.setFileData(diary.getFileData());
+            data.setFileName(diary.getFileName());
+            data.setFileType(diary.getFileType());
+        }
+        diaryRepository.save(data);
     }
 
     public List<Diary> getDiariesByUser(Users user) {

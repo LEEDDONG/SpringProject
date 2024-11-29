@@ -1,7 +1,6 @@
 package com.example.demo.domain;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 import jakarta.persistence.*;
 
