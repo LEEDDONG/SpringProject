@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import com.example.demo.domain.Diary;
 import com.example.demo.domain.Users;
 import com.example.demo.persistance.DiaryRepository;
+
+import jakarta.servlet.http.HttpSession;
 @Service
 public class DiaryService {
 
@@ -43,6 +45,15 @@ public class DiaryService {
 
     public List<Diary> getAllDiaries() {
         return List.of();
+    }
+    
+    public void deleteDiaryById(Long id) {
+        diaryRepository.deleteById(id);
+    }
+    public void logout(HttpSession session) {
+        if (session != null) {
+            session.invalidate(); // 세션 무효화
+        }
     }
 }
 

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+	
     <title>다이어리 목록</title>
     <meta charset="UTF-8">
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&display=swap" rel="stylesheet">
@@ -116,11 +117,40 @@
             font-size: 30px;
         }
         .diary-image-view {
-            max-width: 200px;
-            margin-top: 10px;
+			width: 200px; /* 고정된 너비 */
+			height: 200px; /* 고정된 높이 */
+			object-fit: cover; /* 이미지 비율을 유지하면서 잘라서 맞추기 */
+			margin-top: 10px;
         }
+		.logout-form {
+		    position: absolute;
+		    bottom: 20px; /* 페이지 하단에서 20px 떨어짐 */
+		    right: 40px; /* 박스 오른쪽에서 40px 떨어짐 */
+		}
+
+		.logout-button {
+		    background-color: #ffd56b; /* 노란색 버튼 */
+		    color: white;
+		    padding: 10px 20px;
+		    border: none;
+		    border-radius: 25px;
+		    font-size: 16px;
+		    font-weight: bold;
+		    font-family: 'Quicksand', Arial, sans-serif;
+		    cursor: pointer;
+		    transition: background-color 0.3s ease, transform 0.2s ease;
+		    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+		}
+
+		.logout-button:hover {
+		    background-color: #ffb703; /* 호버 시 더 진한 노란색 */
+		    transform: translateY(-3px); /* 살짝 위로 이동 */
+		    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+		}
+
     </style>
 </head>
+
 <body>
     <div class="diary-container">
         <h1>🐤 My Cute Diaries</h1>
@@ -146,6 +176,10 @@
                 <div class="diary-date" th:text="${diary.date}">작성일</div>
                 <div class="diary-action">
                     <a th:href="@{/diary/{id}(id=${diary.id})}">보기</a>
+					<!-- 다이어리 삭제 버튼 -->
+					<a th:href="@{/diary/delete/{id}(id=${diary.id})}" 
+					   onclick="return confirm('이 다이어리를 삭제하시겠습니까?');" 
+					   class="delete-button">삭제</a>
                 </div>
             </div>
         </div>
@@ -155,5 +189,9 @@
             <p>🐥 현재 다이어리가 없습니다. 추가해 보세요!</p>
         </div>
     </div>
+	<!-- 로그아웃 버튼 -->
+	   <form th:action="@{/login}" method="post" class="logout-form">
+	       <button type="submit" class="logout-button">로그아웃</button>
+	   </form>
 </body>
 </html>
