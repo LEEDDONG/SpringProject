@@ -94,6 +94,10 @@
 	        font-size: 14px;
 	        color: #555;
 	    }
+        .image-view {
+            max-width: 200px;
+            margin-top: 10px;
+        }
 	</style>
 </head>
 <body>
@@ -115,20 +119,19 @@
                 <label for="file" class="file-upload">File</label>
                 <input type="file" id="file" name="file" style="display: none;" onchange="updateFileName()">
 
-                <!-- 기존 파일이 있을 경우 표시 -->
-                <div th:if="${diary.fileName != null}" class="existing-file">
-                    <p>Existing File: <span th:text="${diary.fileName}"></span></p>
-                    <div th:if="${diary.fileType != null and diary.fileType.startsWith('image/')}">
-                        <img th:src="@{/diary/file/{id}(id=${diary.id})}" alt="File preview" style="max-width: 200px; margin-top: 10px;">
-                    </div>
-                    <!-- 다운로드 링크 추가 -->
-                    <a th:href="@{/diary/file/{id}(id=${diary.id})}" download>Download</a>
-                </div>
-
                 <!-- 새 파일 선택 시 표시 -->
                 <div id="file-name" th:text="${diary.fileName != null ? diary.fileName : 'No file chosen'}"></div>
                 <div id="file-preview" style="display: none;">
-                    <img id="file-image" src="" alt="File preview" style="max-width: 200px; margin-top: 10px;">
+                    <img id="file-image" src="" alt="File preview" class="image-view">
+                </div>
+
+                <!-- 기존 파일이 있을 경우 표시 -->
+                <div th:if="${diary.fileName != null}" class="existing-file">
+                    <div th:if="${diary.fileType != null and diary.fileType.startsWith('image/')}">
+                        <img th:src="@{/diary/file/{id}(id=${diary.id})}" alt="File preview" class="image-view">
+                    </div>
+                    <!-- 다운로드 링크 추가 -->
+                    <a th:href="@{/diary/file/{id}(id=${diary.id})}" download>Download</a>
                 </div>
             </div>
 
