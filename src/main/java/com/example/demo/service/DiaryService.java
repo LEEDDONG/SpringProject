@@ -35,6 +35,10 @@ public class DiaryService {
         diaryRepository.save(data);
     }
 
+    public void deleteDiary(Diary diary) {
+        diaryRepository.delete(diary);
+    }
+
     public List<Diary> getDiariesByUser(Users user) {
         return diaryRepository.findByAuthor(user);
     }

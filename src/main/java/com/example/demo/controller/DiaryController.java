@@ -83,25 +83,31 @@
 		}
 
 		@PostMapping("/diary/update")
-		public String update(@ModelAttribute Diary diary, @RequestParam(value = "file", required = false) MultipartFile file, RedirectAttributes redirectAttributes) {
-			if (diary.getId() == null) {
-				// 여기서 예외를 던지거나 500 오류가 발생할 수 있습니다.
-				throw new IllegalArgumentException("The diary ID must not be null");
-			}
-			try {
-				if (file != null && !file.isEmpty()) {
-					// 파일 데이터를 바이너리로 변환
-					diary.setFileData(file.getBytes());
-					diary.setFileName(file.getOriginalFilename());
-					diary.setFileType(file.getContentType());
+		public String update(@ModelAttribute Diary diary, @RequestParam(value = "file", required = false) MultipartFile file, HttpSession session, RedirectAttributes redirectAttributes) {
+			Users loggedInUser = (Users) session.getAttribute("loggedInUser");
+
+			if (loggedInUser != null) {
+				diary.setAuthor(loggedInUser);
+				if (diary.getId() == null) {
+					// 여기서 예외를 던지거나 500 오류가 발생할 수 있습니다.
+					throw new IllegalArgumentException("The diary ID must not be null");
 				}
-				diaryService.updateDiary(diary);
-				redirectAttributes.addFlashAttribute("message", "Diary updated successfully!");
-			} catch (Exception e) {
-				e.printStackTrace();
-				redirectAttributes.addFlashAttribute("message", "Failed to update diary.");
+				try {
+					if (file != null && !file.isEmpty()) {
+						// 파일 데이터를 바이너리로 변환
+						diary.setFileData(file.getBytes());
+						diary.setFileName(file.getOriginalFilename());
+						diary.setFileType(file.getContentType());
+					}
+					diaryService.updateDiary(diary);
+					redirectAttributes.addFlashAttribute("message", "Diary updated successfully!");
+				} catch (Exception e) {
+					e.printStackTrace();
+					redirectAttributes.addFlashAttribute("message", "Failed to update diary.");
+				}
+				return "redirect:/diary";
 			}
-			return "redirect:/diary";
+			return "redirect:/login";
 		}
 
 		@GetMapping("/diary/file/{id}")
@@ -132,5 +138,27 @@
 				e.printStackTrace(); // 예외 로그 출력
 				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null); // 서버 오류 처리
 			}
+		}
+
+		@GetMapping("/diary/delete")
+		public String deleteDiary(@RequestParam Long id, HttpSession session, RedirectAttributes redirectAttributes) {
+			Users loggedInUser = (Users) session.getAttribute("loggedInUser");
+
+			if (loggedInUser != null) {
+				try {
+					Diary diary = diaryService.getDiaryById(id);
+					if (diary != null) {
+						diaryService.deleteDiary(diary);
+						redirectAttributes.addFlashAttribute("message", "Diary deleted successfully!");
+					} else {
+						redirectAttributes.addFlashAttribute("error", "Diary not found!");
+					}
+				} catch (Exception e) {
+					// 예외 처리
+					redirectAttributes.addFlashAttribute("error", "An error occurred while deleting the diary: " + e.getMessage());
+				}
+				return "redirect:/diary";
+			}
+			return "redirect:/login";
 		}
 	}
