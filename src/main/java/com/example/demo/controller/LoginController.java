@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.demo.domain.Users;
 import com.example.demo.persistance.UserRepository;
+import com.example.demo.service.DiaryService;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -70,8 +71,10 @@ public class LoginController {
     // 로그아웃 처리
     @GetMapping("/logout")
     public String logout(HttpSession session) {
-        session.invalidate();
-        return "redirect:/login";
+        // 서비스 계층을 호출하여 로그아웃 처리
+        DiaryService.logout(session);
+
+        // 로그아웃 후 로그인 페이지로 리다이렉트
+        return "redirect:/login?logout";
     }
-	 
 }
